@@ -559,7 +559,6 @@
     }
 
     async function fetchBlogsSilently() {
-      if (!document.getElementById('blog-modal').classList.contains('hidden')) return;
       try {
         const res  = await fetch(`${API_URL}/blogs`);
         let   data = await res.json();
@@ -571,18 +570,55 @@
           return db - da;
         });
 
-        if (sorted.length > allBlogs.length) {
-          showToast('Ada postingan baru masuk!');
+        const myNIM = localStorage.getItem('my_nim');
+        let hasChanges = false;
+
+        // 1. DETEKSI POSTINGAN BARU (Create)
+        const oldIds = new Set(allBlogs.map(b => b.id));
+        const newBlogs = sorted.filter(b => !oldIds.has(b.id));
+        newBlogs.forEach(b => {
+          if (b.author_nim !== myNIM) {
+            showToast(`✨ Wih! ${b.author_nama} baru nulis blog nih!`);
+            hasChanges = true;
+          }
+        });
+
+        // 2. DETEKSI POSTINGAN DIHAPUS (Delete)
+        const newIds = new Set(sorted.map(b => b.id));
+        const deletedBlogs = allBlogs.filter(b => !newIds.has(b.id));
+        deletedBlogs.forEach(b => {
+          if (b.author_nim !== myNIM) {
+            showToast(`🗑️ Yah, postingan ${b.author_nama} baru aja dihapus.`);
+            hasChanges = true;
+          }
+        });
+
+        // 3. DETEKSI POSTINGAN DIEDIT (Update)
+        const oldMap = new Map(allBlogs.map(b => [b.id, b]));
+        sorted.forEach(b => {
+          if (oldMap.has(b.id)) {
+            const oldBlog = oldMap.get(b.id);
+            // Cek apakah isi atau judulnya berbeda
+            if ((b.isi !== oldBlog.isi || b.judul !== oldBlog.judul) && b.author_nim !== myNIM) {
+              showToast(`✏️ Psst! ${b.author_nama} diam-diam ngedit postingannya.`);
+              hasChanges = true;
+            }
+          }
+        });
+
+        // Update UI jika ada perubahan dari orang lain atau dari diri sendiri
+        if (hasChanges || sorted.length !== allBlogs.length) {
           allBlogs = sorted;
           updateStats();
-          const sp = window.scrollY;
+          const sp = window.scrollY; // Simpan posisi scroll biar layar ga loncat
           filterBlogs();
           window.scrollTo(0, sp);
         }
+        
         setLastUpdate();
-      } catch {}
+      } catch (e) {
+      }
     }
-
     /* ── STATS ── */
     function updateStats() {
       document.getElementById('stat-total').textContent   = allBlogs.length;
