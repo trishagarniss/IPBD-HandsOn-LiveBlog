@@ -1,6 +1,6 @@
 # 🚀 Panduan Menjalankan LiveBlogVerse
 
-Project ini menggunakan **Vanilla JavaScript** dengan **Tailwind CSS (CDN)** dan **Marked.js**. Karena aplikasi ini mengambil data dari API eksternal berbasis HTTP (`http://143.198.223.28:8000`), disarankan untuk menjalankannya melalui **Local Server** agar fitur CRUD berjalan lancar tanpa kendala blokir protokol keamanan browser (Mixed Content).
+Project ini menggunakan **Vanilla JavaScript** dengan **Tailwind CSS (CDN)**. Karena aplikasi ini mengambil data dari API eksternal berbasis HTTP (`http://143.198.223.28:8000`), disarankan untuk menjalankannya melalui **Local Server** agar fitur CRUD berjalan lancar tanpa kendala blokir protokol keamanan browser (Mixed Content).
 
 ## 🛠️ Cara Menjalankan Secara Lokal
 Pilih salah satu cara di bawah ini yang paling sesuai dengan *tools* yang terinstal di komputer Anda:
