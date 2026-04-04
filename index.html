@@ -244,7 +244,7 @@
               Platform Blog Praktikum
             </h1>
             <p class="text-indigo-100 text-sm sm:text-[15px] max-w-lg leading-relaxed">
-              Sharing vibes mahasiswa Sains Data. Tulis insight, eksplorasi data, atau sekedar cerita dari praktikum.
+            Dari dataset ke insight, dari error ke overthinking, dari debugging ke existential crisis.
             </p>
           </div>
           <div class="flex-shrink-0">
@@ -482,8 +482,8 @@
 
     async function handleAuth() {
       const nama  = document.getElementById('auth-nama').value.trim();
-      const nim   = document.getElementById('auth-nim').value.trim().toUpperCase();
-      const kelas = document.getElementById('auth-kelas').value.trim().toUpperCase();
+      const nim   = document.getElementById('auth-nim').value.trim();
+      const kelas = document.getElementById('auth-kelas').value.trim();
       const btn   = document.getElementById('btn-auth');
 
       if (!nama || !nim || !kelas) {
