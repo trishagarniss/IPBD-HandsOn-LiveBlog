@@ -464,7 +464,7 @@
         document.getElementById('nav-nama').textContent   = nama;
         document.getElementById('nav-avatar').textContent = nama.charAt(0).toUpperCase();
         fetchBlogs();
-        setInterval(fetchBlogsSilently, 10000);
+        setInterval(fetchBlogsSilently, 4000);
       } else {
         document.getElementById('auth-screen').classList.remove('hidden');
         const app = document.getElementById('main-app');
