@@ -79,6 +79,19 @@
     /* Spin refresh */
     @keyframes spin1 { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
     .spin-once { animation: spin1 0.55s ease; }
+
+    /* Floating Blob Animation */
+    @keyframes blob {
+      0% { transform: translate(0px, 0px) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+    .animate-blob {
+      animation: blob 8s infinite alternate ease-in-out;
+    }
+    .animation-delay-2000 { animation-delay: 2s; }
+    .animation-delay-4000 { animation-delay: 4s; }
   </style>
 </head>
 
@@ -88,8 +101,13 @@
   <div id="toast-container" class="fixed top-4 right-4 z-[300] flex flex-col gap-2 w-80 pointer-events-none"></div>
 
   <!-- AUTH SCREEN -->
-  <div id="auth-screen" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0d1117] dark:via-[#0d1117] dark:to-indigo-950">
-    <div class="w-full max-w-md">
+  <div id="auth-screen" class="relative min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0d1117] dark:via-[#0d1117] dark:to-indigo-950 overflow-hidden">
+    
+    <div class="absolute top-20 left-10 w-72 h-72 bg-purple-300/30 dark:bg-purple-900/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-70 animate-blob pointer-events-none"></div>
+    <div class="absolute top-40 right-10 w-72 h-72 bg-indigo-300/30 dark:bg-indigo-900/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-70 animate-blob animation-delay-2000 pointer-events-none"></div>
+    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300/30 dark:bg-pink-900/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-70 animate-blob animation-delay-4000 pointer-events-none"></div>
+
+    <div class="w-full max-w-md relative z-10">
 
       <!-- Brand -->
       <div class="text-center mb-8">
@@ -194,9 +212,30 @@
           </div>
 
           <!-- User badge -->
-          <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
-            <div id="nav-avatar" class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[11px] font-bold flex-shrink-0">?</div>
-            <span id="nav-nama" class="text-sm font-semibold text-slate-700 dark:text-slate-300 hidden sm:block max-w-[130px] truncate">—</span>
+          <div class="relative flex items-center gap-2">
+            <button onclick="toggleProfile()" id="profile-trigger" class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 pl-2.5 pr-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all group">
+              <div id="nav-avatar" class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[11px] font-bold flex-shrink-0">?</div>
+              <span id="nav-nama" class="text-sm font-semibold text-slate-700 dark:text-slate-300 hidden sm:block max-w-[130px] truncate">—</span>
+              <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+
+            <div id="profile-dropdown" class="hidden absolute top-12 right-0 w-64 bg-white dark:bg-[#161b22] rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 p-5 z-[100] animate-pop">
+              <div class="text-center border-b border-slate-100 dark:border-slate-800 pb-4 mb-4">
+                <div id="prof-avatar" class="w-12 h-12 bg-gradient-to-tr from-indigo-600 to-purple-500 rounded-full flex items-center justify-center text-lg font-black text-white mx-auto mb-2 shadow-md">?</div>
+                <h3 id="prof-nama" class="font-bold text-slate-900 dark:text-white truncate">—</h3>
+                <p id="prof-nim" class="text-[11px] text-indigo-500 font-bold uppercase tracking-widest mt-0.5">—</p>
+              </div>
+              <div class="space-y-3">
+                <div class="flex justify-between text-[11px] font-bold">
+                  <span class="text-slate-400 uppercase">Kelas</span>
+                  <span id="prof-kelas" class="text-slate-700 dark:text-slate-200">—</span>
+                </div>
+                <div class="flex justify-between text-[11px] font-bold">
+                  <span class="text-slate-400 uppercase">Postingan Kamu</span>
+                  <span id="prof-count" class="text-indigo-600 dark:text-indigo-400">0</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Theme toggle -->
@@ -229,6 +268,7 @@
       <div class="relative bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 rounded-2xl p-8 sm:p-10 text-white shadow-xl shadow-indigo-500/20 mb-8 overflow-hidden">
         <div class="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute bottom-0 left-1/4 w-40 h-40 bg-purple-400/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/2 w-32 h-32 bg-indigo-300/20 rounded-full blur-2xl pointer-events-none animate-blob animation-delay-4000"></div>
 
         <div class="relative z-10 flex flex-col sm:flex-row sm:items-center gap-6">
           <div class="flex-1">
@@ -383,14 +423,14 @@
 
         <div>
           <label class="block text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Judul</label>
-          <input id="modal-judul" type="text" placeholder="Caption yang catchy dong..."
+          <input id="modal-judul" type="text" placeholder="Jangan kosong yaa..."
             class="w-full bg-slate-50 dark:bg-[#0d1117] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600" />
         </div>
 
         <div>
           <label class="block text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Isi</label>
           <textarea id="modal-isi" rows="6"
-            placeholder="Tulis apapun — insight praktikum, random thoughts, atau eksplorasi data yang kamu lakuin..."
+            placeholder="Ketik aja dulu, nanti juga kepikiran..."
             class="w-full bg-slate-50 dark:bg-[#0d1117] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none"></textarea>
         </div>
       </div>
@@ -461,8 +501,14 @@
         const app = document.getElementById('main-app');
         app.classList.remove('hidden');
         app.classList.add('flex');
+
         document.getElementById('nav-nama').textContent   = nama;
-        document.getElementById('nav-avatar').textContent = nama.charAt(0).toUpperCase();
+        document.getElementById('nav-avatar').textContent = nama.charAt(0);
+        document.getElementById('prof-nama').textContent = nama;
+        document.getElementById('prof-nim').textContent = localStorage.getItem('my_nim');
+        document.getElementById('prof-kelas').textContent = localStorage.getItem('my_kelas') || '—';
+        document.getElementById('prof-avatar').textContent = nama.charAt(0).toUpperCase();
+        
         fetchBlogs();
         setInterval(fetchBlogsSilently, 2000);
       } else {
@@ -499,6 +545,7 @@
           localStorage.setItem('api_token', data.access_token || data.token);
           localStorage.setItem('my_nama', nama);
           localStorage.setItem('my_nim',  nim);
+          localStorage.setItem('my_kelas', kelas);
           showToast(`Selamat datang, ${nama}!`);
           checkAuth();
         } else {
@@ -623,6 +670,12 @@
     function updateStats() {
       document.getElementById('stat-total').textContent   = allBlogs.length;
       document.getElementById('stat-authors').textContent = new Set(allBlogs.map(b => b.author_nim || b.author_nama)).size;
+    
+      // Hitung postingan
+      const myNIM = localStorage.getItem('my_nim');
+      const myCount = allBlogs.filter(b => b.author_nim === myNIM).length;
+      const profCountEl = document.getElementById('prof-count');
+      if (profCountEl) profCountEl.textContent = myCount;
     }
 
     /* ── SKELETONS ── */
@@ -700,7 +753,9 @@
         const initial = (blog.author_nama || 'A').charAt(0).toUpperCase();
         const grad    = grads[initial.charCodeAt(0) % grads.length];
         const isOwner = nim === myNIM;
-
+        
+        const ownerCardClass = isOwner ? 'border-indigo-500 dark:border-indigo-500 shadow-md shadow-indigo-500/10' : 'border-slate-100 dark:border-slate-800';
+        const ownerBadge = isOwner ? `<div class="absolute -top-3 left-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md z-10 tracking-wider">✨ PUNYA KAMU</div>` : '';
         let dateStr = '—';
         if (blog.created_at) {
           const d = new Date(blog.created_at);
@@ -737,6 +792,7 @@
         card.className = 'blog-card card-in bg-white dark:bg-[#161b22] rounded-2xl p-5 border border-slate-100 dark:border-slate-800 flex flex-col shadow-sm';
         card.style.animationDelay = `${Math.min(idx * 55, 300)}ms`;
         card.innerHTML = `
+          ${ownerBadge}
           <div class="flex justify-between items-start gap-3 mb-3">
             <h2 class="font-bold text-[15px] text-slate-900 dark:text-white line-clamp-2 leading-snug flex-1">${judul}</h2>
             ${ownerBtns}
@@ -746,7 +802,7 @@
             <div class="w-9 h-9 rounded-full bg-gradient-to-br ${grad} flex items-center justify-center text-white text-[13px] font-bold flex-shrink-0 shadow-sm">${initial}</div>
             <div class="flex-1 min-w-0">
               <p class="font-semibold text-sm dark:text-white truncate">${escHtml(blog.author_nama)}</p>
-  <p class="text-[11px] text-indigo-500 font-bold tracking-tight">${blog.author_nim}</p>
+              <p class="text-[11px] text-indigo-500 font-bold tracking-tight">${blog.author_nim}</p>
               <div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-medium mt-0.5">
                 <span>${blog.author_kelas}</span>
                 <span>·</span>
@@ -837,6 +893,20 @@
     /* ── INIT ── */
     applyTheme();
     checkAuth();
+
+    /* ── PROFILE DROPDOWN ── */
+    function toggleProfile() {
+      const dropdown = document.getElementById('profile-dropdown');
+      dropdown.classList.toggle('hidden');
+    }
+
+    window.onclick = function(event) {
+      const dropdown = document.getElementById('profile-dropdown');
+      const trigger = document.getElementById('profile-trigger');
+      if (trigger && dropdown && !trigger.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.add('hidden');
+      }
+    }
   </script>
 </body>
 </html>
