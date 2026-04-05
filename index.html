@@ -92,6 +92,40 @@
     }
     .animation-delay-2000 { animation-delay: 2s; }
     .animation-delay-4000 { animation-delay: 4s; }
+
+    /* Liquid Gradient */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .animate-gradient {
+      background-size: 200% 200%;
+      animation: gradientShift 6s ease infinite;
+    }
+
+    /* Floating Element */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+
+    /* Shimmer Effect buat Badge */
+    @keyframes shine {
+      0% { left: -100%; }
+      20% { left: 100%; }
+      100% { left: 100%; }
+    }
+    .badge-shine { overflow: hidden; position: relative; }
+    .badge-shine::before {
+      content: '';
+      position: absolute; top: 0; left: -100%;
+      width: 50%; height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+      transform: skewX(-20deg);
+      animation: shine 3s infinite;
+    }
   </style>
 </head>
 
@@ -265,7 +299,7 @@
     <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8">
 
       <!-- Hero banner -->
-      <div class="relative bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 rounded-2xl p-8 sm:p-10 text-white shadow-xl shadow-indigo-500/20 mb-8 overflow-hidden">
+      <div class="relative bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 rounded-2xl p-8 sm:p-10 text-white shadow-xl shadow-indigo-500/20 mb-8 overflow-hidden animated-gradient">
         <div class="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute bottom-0 left-1/4 w-40 h-40 bg-purple-400/20 rounded-full blur-2xl pointer-events-none"></div>
         <div class="absolute top-1/2 left-1/2 w-32 h-32 bg-indigo-300/20 rounded-full blur-2xl pointer-events-none animate-blob animation-delay-4000"></div>
@@ -373,7 +407,7 @@
 
       <!-- Empty state -->
       <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center">
-        <div class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 mx-auto">
+        <div class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 mx-auto animate-float shadow-sm">
           <svg class="w-8 h-8 text-slate-400" viewBox="0 0 24 24" fill="none">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -755,7 +789,8 @@
         const isOwner = nim === myNIM;
         
         const ownerCardClass = isOwner ? 'border-indigo-500 dark:border-indigo-500 shadow-md shadow-indigo-500/10' : 'border-slate-100 dark:border-slate-800';
-        const ownerBadge = isOwner ? `<div class="absolute -top-3 left-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md z-10 tracking-wider">✨ PUNYA KAMU</div>` : '';
+        const ownerBadge = isOwner ? `<div class="absolute -top-3 left-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md z-10 tracking-wider badge-shine">✨ PUNYA KAMU</div>` : '';
+        
         let dateStr = '—';
         if (blog.created_at) {
           const d = new Date(blog.created_at);
